@@ -1,0 +1,20 @@
+apply plugin: 'org.ajoberstar.grgit'
+
+task tagRelease {
+    group = 'Publish'
+    description = 'Tags the current head with the project\'s version.'
+    doLast {
+        grgit.tag.add {
+            name = version
+            message = "Release of ${version}"
+        }
+    }
+}
+
+task pushTag {
+    group = 'Publish'
+    description = 'Pushes tags to origin repo.'
+    doLast {
+        grgit.push(tags: true, dryRun: true)
+    }
+}

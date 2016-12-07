@@ -1,6 +1,4 @@
-apply plugin: 'org.ajoberstar.grgit'
-
-task tagRelease {
+task addTag {
     group = 'Publish'
     description = 'Tags the current head with the project\'s version.'
     doLast {
@@ -15,6 +13,30 @@ task pushTag {
     group = 'Publish'
     description = 'Pushes tags to origin repo.'
     doLast {
-        grgit.push(tags: true, dryRun: true)
+        grgit.push()
     }
+}
+
+// grgit.branch.getCurrent().getName()
+
+def buildVersion(gitBranch) {
+
+    if (gitBranch.startsWith('stage/') || gitBranch.startsWith('master')) {
+        return project.version
+    }
+    else {
+        return project.version + '-' + gitBranch.replaceAll('/', '-') + '-SNAPSHOT'
+    }
+}
+
+
+task printBranch {
+    doLast {
+        println buildVersion(grgit.branch.getCurrent().getName())
+    }
+}
+
+task tagVersion {
+    group = 'Publish'
+    dependsOn addTag, pushTag
 }

@@ -1,0 +1,4 @@
+ext {
+    isSnapshot = version.endsWith('-SNAPSHOT')
+    isCi = project.ext.has('teamcity')
+}
